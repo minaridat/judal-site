@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>judal — 공공 공사 입찰 낙찰확률 분석</title>
+<style>
+  :root { --bg:#fff; --fg:#1b1f24; --mute:#5b6572; --line:#e3e7ec; --accent:#0b5cd5; --warn-bg:#fff8e1; --warn-fg:#6b4e00; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0f1318; --fg:#e8ecf1; --mute:#9aa6b4; --line:#262d36; --accent:#6aa5ff; --warn-bg:#2b2410; --warn-fg:#f3d98a; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.7 -apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif; }
+  main { max-width:880px; margin:0 auto; padding:48px 16px 72px; }
+  h1 { font-size:36px; margin:0 0 4px; letter-spacing:-0.5px; }
+  h2 { font-size:22px; margin:44px 0 10px; }
+  p.sub { color:var(--mute); margin:0 0 24px; }
+  .warn { background:var(--warn-bg); color:var(--warn-fg); padding:12px 16px; border-radius:8px; margin:20px 0; }
+  figure { margin:20px 0; } figure img { width:100%; height:auto; border:1px solid var(--line); border-radius:8px; }
+  figcaption { color:var(--mute); font-size:14px; margin-top:6px; }
+  table { border-collapse:collapse; width:100%; font-size:15px; } th,td { border-bottom:1px solid var(--line); padding:8px 10px; text-align:left; }
+  a { color:var(--accent); } footer { margin-top:48px; color:var(--mute); font-size:14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>judal</h1>
+  <p class="sub">공공 공사 적격심사 입찰 — 투찰금액별 낙찰 확률 분석 (개발 중인 데모)</p>
+
+  <div class="warn">현재 개발·검증 단계의 데모입니다. 화면의 수치는 과거 공개 데이터를 이용한 <strong>모형상 예측·가상 시뮬레이션</strong>이며 낙찰을 보장하지 않습니다. 외부 이용자에게 제공되는 서비스가 아닙니다.</div>
+
+  <h2>무엇을 하나요</h2>
+  <p>공사 적격심사 입찰은 예정가격이 추첨으로 정해지고 참가업체가 수백 곳에 이릅니다. judal은 나라장터의 공개 입찰 데이터를 분석해, 업체가 투찰금액을 정할 때 참고할 수 있는 근거를 제공하는 것을 목표로 합니다.</p>
+  <ul>
+    <li><strong>낙찰 규칙 재현</strong> — 낙찰하한선 규칙을 코드로 구현해 실제 개찰 결과와 비교합니다.</li>
+    <li><strong>금액별 낙찰확률</strong> — 경쟁 입찰 분포와 사정률 분포로 몬테카를로 시뮬레이션을 수행합니다.</li>
+    <li><strong>백테스트</strong> — 과거 공고로 방식의 성능을 시간순으로 검증하고, 한계를 함께 표시합니다.</li>
+    <li><strong>공고 선별(연구 중)</strong> — 투찰 전 공고 정보로 경쟁 강도(참가업체 수)를 예측합니다.</li>
+  </ul>
+
+  <h2>화면</h2>
+  <figure><img src="img/01_rule_reproduction.png" alt="낙찰 규칙 재현 화면" loading="lazy">
+    <figcaption>① 낙찰 규칙 재현 — A값을 반영한 하한선으로 ‘낙찰하한선 미달’ 판정 일치율을 비교 (787개 공고, 2026-09 개찰 데모 데이터)</figcaption></figure>
+  <figure><img src="img/02_win_probability.png" alt="금액별 낙찰확률 화면" loading="lazy">
+    <figcaption>② 금액별 낙찰확률 — 투찰금액별 확률 곡선과 후보 금액(확률 최대, 보수 대안)</figcaption></figure>
+  <figure><img src="img/03_backtest.png" alt="백테스트 화면" loading="lazy">
+    <figcaption>③ 백테스트 미리보기 — 전략별 가상 낙찰률과 95% 구간, 모형 확률 대 실제 곡선</figcaption></figure>
+
+  <h2>사용 데이터</h2>
+  <table>
+    <tr><th>출처</th><td>공공데이터포털 · 조달청 나라장터 입찰공고정보서비스, 낙찰정보서비스, 계약정보서비스, 사용자정보서비스(OpenAPI)</td></tr>
+    <tr><th>범위(데모)</th><td>2026-09-01 ~ 09-15 개찰된 공사 공고 787건 (복수예가, 적격심사)</td></tr>
+    <tr><th>개인정보</th><td>수집하지 않으며 법인 단위 공개 정보만 사용합니다.</td></tr>
+  </table>
+
+  <h2>원칙</h2>
+  <ul>
+    <li>검증되지 않은 성능은 주장하지 않습니다. 사용한 데이터, 가정, 한계를 결과와 함께 표시합니다.</li>
+    <li>개찰 후에만 알 수 있는 값은 입력으로 쓰지 않습니다(시점 누수 방지).</li>
+    <li>입찰 담합이나 비공개 정보 확보를 목적으로 하지 않습니다.</li>
+  </ul>
+
+  <footer>judal · 개발 중 · 데이터 출처: 공공데이터포털(data.go.kr) 조달청 OpenAPI</footer>
+</main>
+</body>
+</html>
